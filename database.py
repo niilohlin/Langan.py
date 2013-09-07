@@ -5,6 +5,8 @@ import sqlite3
 
 path = 'database.db'
 
+old_copy = []
+
 def get_all(path):
 	pass
 

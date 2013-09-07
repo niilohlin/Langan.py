@@ -51,23 +51,33 @@ def _percentage(freq):
 	s = float(_sum(freq))
 	return _map_hash_values(lambda v : v / s, freq)
 
-def closest(freq, db):
+def uberclosest(freq, db):
 	"""Tries guess of which language the given freq
 	is corresponding to. Returns a list of the language
 	and the error rate. Smaller == better.
 	"""
 	freq = _percentage(freq)
-	for i in xrange(len(db)):
-		db[i][1] = _percentage(db[i][1])
-	res = []
-	for lang, langfreq in db:
-		res.append([lang, _compare(freq, langfreq)])
-	res = map(lambda x: [x[0],_sum(x[1])], res)
-	smallest = res[0]
-	for i in res:
-		if i[1] < smallest[1]:
-			smallest = i
+	resdb = {}
+	for k, v in db.iteritems():
+		resdb[k] = _percentage(v)
+	res = {}
+
+	for lang, langfreq in resdb.iteritems():
+		res[lang] = _compare(freq, langfreq)
+
+	for lang, langfreq in res.iteritems():
+		res[lang] = _sum(langfreq)
+
+	smallest = {}
+	for k, v in res.iteritems():
+		smallest = (k, v)
+		break
+	
+	for k, v in res.iteritems():
+		if v < smallest[1]:
+			smallest = (k, v)
 	return smallest
+
 
 
 def _merge(db1, db2):
@@ -82,7 +92,8 @@ def guess(text, db):
 	return closest(analayze(text), db)
 
 
+db = {'sv': analyze('okej nu blir det lite sveska i huset'),
+		'en': analyze("okay well this is a little bit of english")
+		}
 
-db = [['sv', analyze("okej nu blir det lite sveska i huset")],
-		['en', analyze("okay well this is a little bit of english")]]
 freq = analyze("och nu har vi lite sveska att leka med igen")
