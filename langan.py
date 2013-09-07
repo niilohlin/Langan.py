@@ -8,7 +8,6 @@ def analyze(text):
 	"""Calculate the letterfrequency of each letter in 
 	a string, and return it.
 	"""
-	text = text
 	freq = _freq(text)
 	return freq
 
@@ -69,6 +68,14 @@ def closest(freq, db):
 		if i[1] < smallest[1]:
 			smallest = i
 	return smallest
+
+
+def _merge(db1, db2):
+	pass
+
+def train(text, lang, db):
+	pass
+	#return [lang, analyze(text)]
 
 def guess(text, db):
 	"""Tries to guess the language of a given text"""
