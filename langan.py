@@ -51,17 +51,18 @@ def _percentage(freq):
 	s = float(_sum(freq))
 	return _map_hash_values(lambda v : v / s, freq)
 
-def uberclosest(freq, db):
+def closest(freq, db):
 	"""Tries guess of which language the given freq
 	is corresponding to. Returns a list of the language
 	and the error rate. Smaller == better.
 	"""
 	freq = _percentage(freq)
-	resdb = {}
-	for k, v in db.iteritems():
-		resdb[k] = _percentage(v)
-	res = {}
 
+	resdb = {}
+	for lang, langfreq in db.iteritems():
+		resdb[lang] = _percentage(langfreq)
+
+	res = {}
 	for lang, langfreq in resdb.iteritems():
 		res[lang] = _compare(freq, langfreq)
 
@@ -89,7 +90,7 @@ def train(text, lang, db):
 
 def guess(text, db):
 	"""Tries to guess the language of a given text"""
-	return closest(analayze(text), db)
+	return closest(analyze(text), db)
 
 
 db = {'sv': analyze('okej nu blir det lite sveska i huset'),

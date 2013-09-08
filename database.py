@@ -10,7 +10,7 @@ occ int not null,
 primary key (cc, char));'''
 path = 'database.db'
 
-old_copy = {}
+old_copy = None
 
 def get_all(path='database.db'):
 	conn = sqlite3.connect(path)
@@ -68,6 +68,9 @@ def diff(new, old):
 
 
 def save(db):
+	global old_copy
+	if old_copy == None:
+		old_copy = get_all()
 	new, updatedb = diff(db, old_copy)
 	set_all(new, path)
 	update(updatedb, path)
