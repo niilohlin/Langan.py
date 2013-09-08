@@ -29,10 +29,15 @@ def _compare(first, second):
 			res[fk] = fv
 
 	for sk, sv in second.iteritems():
-		if sk in first and not sk in res:
-			res[sk] = abs(sv - first[sk])
-		else:
+		if not sk in first:
 			res[sk] = sv
+
+#	for sk, sv in second.iteritems():
+#		if sk in first and not sk in res:
+#			res[sk] = abs(sv - first[sk])
+#			print "this is happening"
+#		else:
+#			res[sk] = sv
 	return res
 
 def _sum(compared):
@@ -51,6 +56,12 @@ def _percentage(freq):
 	s = float(_sum(freq))
 	return _map_hash_values(lambda v : v / s, freq)
 
+def _get_first(adict):
+	smallest = {}
+	for k, v in adict.iteritems():
+		smallest = (k, v)
+		return k, v
+
 def closest(freq, db):
 	"""Tries guess of which language the given freq
 	is corresponding to. Returns a list of the language
@@ -58,23 +69,21 @@ def closest(freq, db):
 	"""
 	freq = _percentage(freq)
 
-	resdb = {}
+	prctage = {}
 	for lang, langfreq in db.iteritems():
-		resdb[lang] = _percentage(langfreq)
+		prctage[lang] = _percentage(langfreq)
 
-	res = {}
-	for lang, langfreq in resdb.iteritems():
-		res[lang] = _compare(freq, langfreq)
+	compared = {}
+	for lang, langfreq in prctage.iteritems():
+		compared[lang] = _compare(freq, langfreq)
 
-	for lang, langfreq in res.iteritems():
-		res[lang] = _sum(langfreq)
+	summed = {}
+	for lang, langfreq in compared.iteritems():
+		summed[lang] = _sum(langfreq)
 
-	smallest = {}
-	for k, v in res.iteritems():
-		smallest = (k, v)
-		break
-	
-	for k, v in res.iteritems():
+	smallest = _get_first(summed)
+	for k, v in summed.iteritems():
+		print(k, v)
 		if v < smallest[1]:
 			smallest = (k, v)
 	return smallest

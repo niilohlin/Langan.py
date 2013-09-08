@@ -58,9 +58,17 @@ def diff(new, old):
 			for char, occ in freq.iteritems():
 				if char in old[lang]:
 					if not occ == old[lang][char]:
-						update[lang] = {char : occ}
+
+						if lang in update:
+							update[lang][char] = occ
+						else:
+							update[lang] = {char: occ}
+					
 				else:
-					insert[lang] = {char : occ}
+					if lang in insert:
+						insert[lang][char] = occ
+					else:
+						insert[lang] = {char: occ}
 		else:
 			insert[lang] = freq
 
