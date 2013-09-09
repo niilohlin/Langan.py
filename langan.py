@@ -8,16 +8,15 @@ def analyze(text):
 	"""Calculate the letterfrequency of each letter in 
 	a string, and return it.
 	"""
-	freq = _freq(text)
-	return freq
+	return n_grams(text, 1)
 
-def _freq(text):
+def n_grams(text, n):
 	res = {}
-	for c in text:
-		if c in res:
-			res[c] += 1
+	for i in range(len(text) - n + 1):
+		if text[i:i + n] in res:
+			res[text[i:i + n]] += 1
 		else:
-			res[c] = 1
+			res[text[i:i + n]] = 1
 	return res
 
 def _compare(first, second):
