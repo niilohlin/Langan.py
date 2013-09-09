@@ -75,6 +75,42 @@ def diff(new, old):
 	return insert, update
 
 
+def merge(first, second):
+	res = {}
+	for lang, freq in second.iteritems():
+		if lang in first:
+			for char, occ in freq.iteritems():
+				if char in first[lang]:
+					if lang in res:
+						res[lang][char] = occ
+					else:
+						res[lang] = {char: occ}
+				else:
+					if lang in res:
+						res[lang][char] = occ
+					else:
+						res[lang] = {char: occ}
+		else:
+			res[lang] = freq
+
+	for lang, freq in first.iteritems():
+		if lang in second:
+			for char, occ in freq.iteritems():
+				if char in second[lang]:
+					if lang in res:
+						res[lang][char] = occ
+					else:
+						res[lang] = {char: occ}
+				else:
+					if lang in res:
+						res[lang][char] = occ
+					else:
+						res[lang] = {char: occ}
+		else:
+			res[lang] = freq
+
+	return res
+
 def save(db):
 	global old_copy
 	if old_copy == None:
