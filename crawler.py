@@ -5,11 +5,16 @@ import wikipedia
 import langan
 import random
 import database
+import signal
+
+class TimeoutException(Exception):
+	pass
 
 class Crawler:
 	def __init__(self):
 		self.tolerance = 1000
-		self.times = 200
+		self.timeout = 20
+		self.times = 1000
 
 	@staticmethod
 	def random_language():
@@ -20,6 +25,11 @@ class Crawler:
 					'cs', 'ko', 'hu', 'ar', 'ro', 'ms'])
 
 	def start(self):
+		def timeout_handler(signum, frame):
+			raise TimeoutException()
+
+		signal.signal(signal.SIGALRM,timeout_handler)
+		signal.alarm(self.timeout)
 		for i in range(self.times):
 			try:
 				lang = Crawler.random_language()

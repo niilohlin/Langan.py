@@ -83,7 +83,7 @@ def closest(freq, db):
 
 	smallest = _get_first(summed)
 	for k, v in summed.iteritems():
-		print(k, v)
+#		print(k, v)
 		if v < smallest[1]:
 			smallest = (k, v)
 	return smallest
