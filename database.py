@@ -118,4 +118,5 @@ def save(db):
 	new, updatedb = diff(db, old_copy)
 	set_all(new, path)
 	update(updatedb, path)
+	old_copy = merge(new, merge(update, old_copy))
 
