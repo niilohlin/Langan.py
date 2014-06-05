@@ -53,8 +53,7 @@ def _get_first(adict):
     for k, v in adict.iteritems():
         return k, v
 
-def compose(f, g):
-    return lambda x: f(g(x))
+
 
 def closest(freq, db):
     """Tries guess of which language the given freq
@@ -78,11 +77,30 @@ def closest(freq, db):
 
     smallest = _get_first(summed)
     for k, v in summed.iteritems():
-#        print(k, v)
         if v < smallest[1]:
             smallest = (k, v)
     return smallest
 
+def compose(f, g, h):
+    return lambda x: f(g(h(x)))
+def partial(f, v):
+    return lambda x: f(v, x)
+
+# TODO benchmark this.
+def functclosest(freq, db):
+    """Tries guess of which language the given freq
+    is corresponding to. Returns a list of the language
+    and the error rate. Smaller == better.
+    """
+    compfreq = partial(_compare, _percentage(freq))
+    superfun = compose(_sum, compfreq, _percentage)
+    summed = {lang: superfun(langfreq) for lang, langfreq in db.iteritems()}
+
+    smallest = _get_first(summed)
+    for k, v in summed.iteritems():
+        if v < smallest[1]:
+            smallest = (k, v)
+    return smallest
 
 
 def _merge(db1, db2):
@@ -94,7 +112,7 @@ def train(text, lang, db):
 
 def guess(text, db):
     """Tries to guess the language of a given text"""
-    return closest(analyze(text), db)
+    return functclosest(analyze(text), db)
 
 
 db = {'sv': analyze('okej nu blir det lite sveska i huset'),
